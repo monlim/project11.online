@@ -6,70 +6,15 @@
 <title>Eleven Gallery &mdash; Project Eleven</title>
 <meta name="description" content="Eleven Gallery is Project Eleven's gallery space in Yogyakarta, Indonesia — a home for exhibitions, residencies and community initiatives.">
 <link rel="canonical" href="https://www.project11.online/eleven-gallery">
-<link rel="icon" type="image/x-icon" href="assets.squarespace.com/universal/default-favicon.ico">
-<style>
-  @font-face {
-    font-family: "Poppins";
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-    src: url("file.squarespace-cdn.com/content/v2/namespaces/fonts/libraries/sqsp/assets/da0c3c0d-458f-46e2-9c64-bac004d4e8c1/latin.woff2") format("woff2");
-  }
-  @font-face {
-    font-family: "Poppins";
-    font-weight: 500;
-    font-style: normal;
-    font-display: swap;
-    src: url("file.squarespace-cdn.com/content/v2/namespaces/fonts/libraries/sqsp/assets/abb8d202-34bc-4174-a25f-c00d4154bb44/latin.woff2") format("woff2");
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: "Poppins", "Helvetica Neue", sans-serif; font-weight: 400; color: #000; background: #fff; line-height: 1.8; }
-  h1, h2, h3 { font-weight: 500; line-height: 1.4; }
-  img { display: block; max-width: 100%; height: auto; }
-  a { color: inherit; }
-
-  /* Header over hero */
-  header {
-    position: absolute; top: 0; left: 0; right: 0; z-index: 2;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 30px 40px; color: #fff;
-  }
-  header .logo img { width: 110px; height: auto; }
-  nav { display: flex; flex-wrap: wrap; gap: 28px; }
-  nav a { color: #fff; text-decoration: none; font-size: 1rem; }
-  nav a:hover, nav a.current { text-decoration: underline; text-underline-offset: 6px; }
-
-  /* Hero */
-  .hero { position: relative; min-height: 62vh; display: flex; align-items: center; justify-content: center; }
-  .hero > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 35%; }
-  .hero::after { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,0.25); }
-  .hero-title { position: relative; z-index: 1; text-align: center; color: #fff; padding: 120px 20px 60px; }
-  .hero-title h1 { font-size: clamp(2.4rem, 6vw, 4rem); }
-  .hero-title p { margin-top: 0.5em; }
-
-  /* Sections */
-  section { max-width: 1100px; margin: 0 auto; padding: 60px 24px; }
-  section h2 { font-size: clamp(1.6rem, 3.5vw, 2.2rem); margin-bottom: 0.6em; }
-  section h3 { font-size: 1.1rem; margin-bottom: 1.2em; }
-  section p { margin-bottom: 1.2em; }
-  .meta { opacity: 0.7; font-size: 0.95rem; }
-
-  .photo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin: 2em 0 1em; }
-  .photo-grid img { width: 100%; height: 100%; object-fit: cover; }
-
-  .two-col { display: grid; grid-template-columns: minmax(260px, 400px) 1fr; gap: 44px; align-items: start; }
-  @media (max-width: 799px) { .two-col { grid-template-columns: 1fr; } }
-
-  footer { background: #1f1f1f; color: #fff; text-align: center; padding: 80px 24px; margin-top: 40px; }
-  footer a { color: #fff; text-decoration: none; }
-</style>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="stylesheet" href="css/site.css">
 </head>
 <body>
 
 <header>
-  <a class="logo" href="index.html"><img src="images.squarespace-cdn.com/content/v1/5e447c860047bf4db951e40f/1591329534909-1IWYNYJINAJ1NH8CX0L0/PROJECT11LOGO.png@format=1500w" alt="Project Eleven"></a>
-  <nav>
+  <a class="logo" href="index.html"><img src="images/content/v1/5e447c860047bf4db951e40f/1591329534909-1IWYNYJINAJ1NH8CX0L0/PROJECT11LOGO.png" alt="Project Eleven"></a>
+  <button class="menu-toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  <nav class="site-nav">
     <a href="index.html">Home</a>
     <a href="projects.html">Projects</a>
     <a href="publications.html">Publications</a>
@@ -77,6 +22,7 @@
     <a href="contact.html">Contact</a>
   </nav>
 </header>
+
 
 <div class="hero">
   <img src="eleven-gallery/soft-opening-1.jpg" alt="Guests at the Eleven Gallery soft opening, surrounded by Arwin Hidayat's works">
@@ -119,7 +65,12 @@
 
 <footer>
   <a href="mailto:info@project11.online">info@project11.online</a>
+  <div class="social">
+    <a href="http://www.instagram.com/project11foundation" target="_blank" rel="noopener">Instagram</a>
+    <a href="http://facebook.com/project11foundation" target="_blank" rel="noopener">Facebook</a>
+  </div>
 </footer>
 
+<script src="js/site.js"></script>
 </body>
 </html>

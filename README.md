@@ -1,23 +1,36 @@
 # Project Eleven — www.project11.online
 
-Static archive of the Project Eleven website, migrated from Squarespace to GitHub Pages in July 2026.
+Static website for Project Eleven, served by GitHub Pages. Originally on
+Squarespace; rebuilt in July 2026 as simple hand-editable HTML.
 
-**Building through art** — Project Eleven fosters cultural exchange between Australian and Indonesian artists.
+**Building through art** — Project Eleven fosters cultural exchange between
+Australian and Indonesian artists.
 
-## Structure
+## How the site works
 
-- `index.html` / `home.html` — homepage
-- `about-us.html`, `contact.html`, `publications.html` — main pages
-- `projects-2016.html` … `projects-2025.html` — projects by year
-- `s/` — downloadable PDF catalogues
-- `videos/` — self-hosted video (formerly Squarespace-hosted)
-- `images.squarespace-cdn.com/`, `static1.squarespace.com/`, `assets.squarespace.com/`, `definitions.sqspcdn.com/`, `file.squarespace-cdn.com/` — all site assets, downloaded from the Squarespace CDN so the site is fully self-contained
+Every page is a plain HTML file that shares:
 
-## Hosting
+- `css/site.css` — the master stylesheet. All styling lives here.
+- `js/site.js` — the site's only JavaScript (the mobile hamburger menu).
+- `fonts/` — self-hosted Poppins font files.
 
-Served by GitHub Pages from the `main` branch root. The custom domain is set via the `CNAME` file.
+To edit a page, open its HTML file and change the text. To add a page, copy an
+existing one, edit the content between `</header>` and `<footer>`, and add a
+link to the `<nav>` list in each page.
 
-## Known limitations
+## Pages
 
-- The newsletter signup (homepage) and contact form previously posted to Squarespace's backend and no longer submit. To restore them, wire the forms to a service such as Formspree, Basin, or Netlify Forms.
-- The shopping cart page (`cart.html`) is a leftover from Squarespace commerce and is not linked from navigation.
+- `index.html` — homepage (hero, mission and vision). `home.html` redirects here.
+- `projects.html` — projects index with year cards.
+- `projects-2016.html` … `projects-2025.html` — projects by year.
+- `publications.html` — catalogues, with PDFs in `s/`.
+- `eleven-gallery.html` — the gallery space in Yogyakarta (photos in `eleven-gallery/`).
+- `contact.html` — contact details.
+
+## Assets
+
+- `images/` — all photography and artwork images (paths kept from the
+  Squarespace export).
+- `videos/` — self-hosted video.
+- `s/` — downloadable PDF catalogues.
+- `CNAME` — custom-domain config for GitHub Pages; don't delete.
