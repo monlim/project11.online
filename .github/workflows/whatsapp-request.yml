@@ -21,6 +21,9 @@ jobs:
   make-change:
     runs-on: ubuntu-latest
     steps:
+      - name: Mask sender phone number in logs
+        run: echo "::add-mask::${{ github.event.client_payload.sender }}"
+
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
