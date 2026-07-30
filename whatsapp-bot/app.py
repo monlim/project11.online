@@ -94,8 +94,14 @@ async def receive(request: Request):
     data = json.loads(raw)
     for entry in data.get("entry", []):
         for change in entry.get("changes", []):
-            for msg in change.get("value", {}).get("messages", []):
+            value = change.get("value", {})
+            for msg in value.get("messages", []):
                 handle_message(msg)
+            for st in value.get("statuses", []):
+                line = f"status: {st.get('status')} id={st.get('id', '')[-12:]}"
+                for err in st.get("errors", []) or []:
+                    line += f" ERROR {err.get('code')}: {err.get('title')} — {err.get('message', '')} {json.dumps(err.get('error_data', {}))}"
+                print(line, flush=True)
     return {"ok": True}
 
 
