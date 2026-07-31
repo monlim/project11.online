@@ -3,7 +3,8 @@ name: WhatsApp website request
 # Triggered by the WhatsApp webhook service (see whatsapp-bot/) via
 # repository_dispatch. Claude Code makes the requested change on a branch and
 # opens a pull request. A human merges the PR on GitHub; merging publishes the
-# change via GitHub Pages.
+# change via GitHub Pages. Replies go to the requester on WhatsApp, and the
+# site owner also gets an alert when the requester is someone else.
 
 on:
   repository_dispatch:
@@ -69,6 +70,22 @@ jobs:
           claude_args: |
             --allowedTools "Read,Glob,Grep,Edit,Write,Bash(git:*),Bash(gh pr create:*),Bash(gh pr view:*)"
 
+      - name: Record requester on the pull request (encrypted)
+        if: always()
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SENDER: ${{ github.event.client_payload.sender }}
+          STATE_KEY: ${{ secrets.WA_STATE_KEY }}
+          BRANCH: whatsapp/${{ github.run_id }}
+        run: |
+          PR=$(gh pr list --head "$BRANCH" --json number --jq '.[0].number' 2>/dev/null || true)
+          if [ -z "$PR" ] || [ -z "$STATE_KEY" ]; then exit 0; fi
+          BLOB=$(printf %s "$SENDER" | openssl enc -aes-256-cbc -pbkdf2 -salt -base64 -A -pass pass:"$STATE_KEY")
+          BODY=$(gh pr view "$PR" --json body --jq .body)
+          printf '%s\n\n<!-- wa:%s -->\n' "$BODY" "$BLOB" > /tmp/prbody.txt
+          gh pr edit "$PR" --body-file /tmp/prbody.txt
+
       - name: Reply on WhatsApp with the result
         if: always()
         continue-on-error: true
@@ -77,26 +94,20 @@ jobs:
           WHATSAPP_TOKEN: ${{ secrets.WHATSAPP_TOKEN }}
           PHONE_NUMBER_ID: ${{ secrets.WHATSAPP_PHONE_NUMBER_ID }}
           SENDER: ${{ github.event.client_payload.sender }}
+          OWNER: ${{ secrets.WA_OWNER_NUMBER }}
           BRANCH: whatsapp/${{ github.run_id }}
         run: |
           SUMMARY=$(cat /tmp/wa-summary.txt 2>/dev/null || echo "Sorry - something went wrong handling your request. Please try again or rephrase.")
           PR_URL=$(gh pr list --head "$BRANCH" --json url --jq '.[0].url' 2>/dev/null || true)
-          export WA_SUMMARY="$SUMMARY" WA_PR_URL="$PR_URL"
-          python3 -c '
-          import json, os, urllib.request
-          body = os.environ["WA_SUMMARY"]
-          if os.environ.get("WA_PR_URL"):
-              body += "\n\nReview and publish here: " + os.environ["WA_PR_URL"]
-          payload = {
-              "messaging_product": "whatsapp",
-              "to": os.environ["SENDER"],
-              "type": "text",
-              "text": {"body": body[:4000]},
-          }
-          req = urllib.request.Request(
-              "https://graph.facebook.com/v20.0/%s/messages" % os.environ["PHONE_NUMBER_ID"],
-              data=json.dumps(payload).encode(),
-              headers={"Authorization": "Bearer " + os.environ["WHATSAPP_TOKEN"],
-                       "Content-Type": "application/json"})
-          print("whatsapp reply:", urllib.request.urlopen(req).status)
-          '
+          BODY="$SUMMARY"
+          if [ -n "$PR_URL" ]; then
+            BODY="$BODY
+
+Review and publish here: $PR_URL"
+          fi
+          python3 whatsapp-bot/wa_send.py "$SENDER" "$BODY"
+          if [ -n "$OWNER" ] && [ "$OWNER" != "$SENDER" ]; then
+            python3 whatsapp-bot/wa_send.py "$OWNER" "New website change request from another administrator:
+
+$BODY"
+          fi

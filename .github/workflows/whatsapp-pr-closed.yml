@@ -1,0 +1,48 @@
+name: WhatsApp PR outcome notification
+
+# When a WhatsApp-originated pull request is closed, tell both the original
+# requester and the site owner what happened: merged = published, closed
+# without merging = declined. The requester's number is stored encrypted in
+# the PR body by the request workflow.
+
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  notify:
+    if: startsWith(github.event.pull_request.head.ref, 'whatsapp/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Notify requester and owner
+        continue-on-error: true
+        env:
+          WHATSAPP_TOKEN: ${{ secrets.WHATSAPP_TOKEN }}
+          PHONE_NUMBER_ID: ${{ secrets.WHATSAPP_PHONE_NUMBER_ID }}
+          OWNER: ${{ secrets.WA_OWNER_NUMBER }}
+          STATE_KEY: ${{ secrets.WA_STATE_KEY }}
+          TITLE: ${{ github.event.pull_request.title }}
+          MERGED: ${{ github.event.pull_request.merged }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          SENDER=""
+          BLOB=$(printf '%s\n' "$PR_BODY" | sed -n 's/.*<!-- wa:\([A-Za-z0-9+/=]*\) -->.*/\1/p' | tail -1)
+          if [ -n "$BLOB" ] && [ -n "$STATE_KEY" ]; then
+            SENDER=$(printf %s "$BLOB" | openssl enc -d -aes-256-cbc -pbkdf2 -base64 -A -pass pass:"$STATE_KEY" 2>/dev/null || true)
+          fi
+          if [ -n "$SENDER" ]; then echo "::add-mask::$SENDER"; fi
+          if [ "$MERGED" = "true" ]; then
+            MSG="Approved and published: \"$TITLE\" is now live on www.project11.online."
+          else
+            MSG="Not published: the change \"$TITLE\" was declined and will not go live."
+          fi
+          python3 whatsapp-bot/wa_send.py "$SENDER" "$MSG"
+          if [ -n "$OWNER" ] && [ "$OWNER" != "$SENDER" ]; then
+            python3 whatsapp-bot/wa_send.py "$OWNER" "$MSG"
+          fi

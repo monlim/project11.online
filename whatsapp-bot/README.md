@@ -73,6 +73,22 @@ The bot acknowledges, and a few minutes later replies with a summary and a
 pull-request link. Open the link, check the change, press **Merge** — the site
 updates a minute later. Messages from unknown numbers are ignored.
 
+## Notifications
+
+- The requester always gets the result + PR link on WhatsApp.
+- If `WA_OWNER_NUMBER` (repo secret) is set, the owner also gets an alert
+  whenever someone else requests a change.
+- When a `whatsapp/*` PR is merged or closed, both the requester and the owner
+  are told the outcome (published / declined). The requester's number is stored
+  encrypted in the PR body using the `WA_STATE_KEY` repo secret.
+- WhatsApp only allows free-form messages within 24h of the recipient's last
+  message to the bot; outside that window the workflows fall back to the
+  generic hello_world template as a "check the bot chat" ping.
+
+Extra repo secrets for notifications: `WA_OWNER_NUMBER` (owner's number,
+digits only with country code) and `WA_STATE_KEY` (any random string, e.g.
+`openssl rand -hex 16`).
+
 ## Notes
 
 - Text requests only for now (photo attachments could be added later).
