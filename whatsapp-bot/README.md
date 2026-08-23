@@ -91,7 +91,13 @@ digits only with country code) and `WA_STATE_KEY` (any random string, e.g.
 
 ## Notes
 
-- Text requests only for now (photo attachments could be added later).
+- Photos, videos and PDFs (up to ~10 MB) can be sent to the bot. Attachments
+  are stored on the `media-inbox` branch, then copied into the site by Claude.
+  Send a file with a caption to action it immediately, or send files first and
+  describe the change in a follow-up message — pending files are remembered for
+  24 hours.
+- Attachments live on a branch of this public repo, so treat anything you send
+  as publishable.
 - The GitHub Action's prompt constrains Claude to site-content edits; it cannot
   touch workflows, DNS config, or this bot.
 - Meta access tokens can expire depending on how they were created — a System
