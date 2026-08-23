@@ -97,6 +97,30 @@ jobs:
           claude_args: |
             --allowedTools "Read,Glob,Grep,Edit,Write,Bash(git:*),Bash(gh pr create:*),Bash(gh pr view:*),Bash(ls:*),Bash(cp:*),Bash(mkdir:*),Bash(file:*)"
 
+      - name: Explain Claude failure
+        if: failure()
+        continue-on-error: true
+        run: |
+          python3 - <<'PY'
+          import glob, json, os
+          hits = []
+          for path in glob.glob(os.path.expanduser("~/work/_temp/claude-execution-output.json")):
+              try:
+                  data = json.load(open(path))
+              except Exception as exc:
+                  print("could not read execution log:", exc)
+                  continue
+              events = data if isinstance(data, list) else [data]
+              for ev in events:
+                  if isinstance(ev, dict) and ev.get("is_error"):
+                      for key in ("result", "error", "subtype"):
+                          val = ev.get(key)
+                          if isinstance(val, str) and val:
+                              hits.append(f"{key}: {val[:400]}")
+          print("--- Claude error detail ---")
+          print("\n".join(dict.fromkeys(hits)) or "no error text captured")
+          PY
+
       - name: Record requester on the pull request (encrypted)
         if: always()
         continue-on-error: true
