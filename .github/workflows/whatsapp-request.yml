@@ -80,6 +80,9 @@ jobs:
               images/ or eleven-gallery/. Never modify .github/, CNAME,
               .nojekyll, or whatsapp-bot/.
             - Match the site's existing clean style and tone. Keep edits minimal.
+            - If you change css/site.css, bump the version on every page's
+              stylesheet link (css/site.css?v=N -> ?v=N+1), or visitors with a
+              cached stylesheet will see the page render wrongly.
             - If the request is unclear, out of scope, or unsafe, make NO changes
               and open NO pull request.
 

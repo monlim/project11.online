@@ -11,6 +11,9 @@ Australian and Indonesian artists.
 Every page is a plain HTML file that shares:
 
 - `css/site.css` — the master stylesheet. All styling lives here.
+  **After changing it, bump the version in every page's link**
+  (`css/site.css?v=2` → `?v=3`). Browsers cache the stylesheet, so without
+  this some visitors keep the old one and the page renders wrongly.
 - `js/site.js` — the site's only JavaScript (the mobile hamburger menu).
 - `fonts/` — self-hosted Poppins font files.
 
