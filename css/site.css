@@ -101,6 +101,9 @@ figcaption { font-size: 0.9rem; opacity: 0.7; margin-top: 0.6em; }
 /* captioned grid items keep their natural height so the caption sits below */
 .photo-grid figure img { height: auto; }
 
+/* Embedded video (YouTube/Vimeo), responsive 16:9 */
+.video-embed { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; margin: 2em 0 0.6em; background: #000; }
+
 /* Partner logo on a dark panel, for white-on-transparent marks */
 .logo-panel { background: #1f1f1f; padding: 38px 34px; display: flex; align-items: center; justify-content: center; }
 .logo-panel img { width: 100%; height: auto; }
