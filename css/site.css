@@ -101,6 +101,10 @@ figcaption { font-size: 0.9rem; opacity: 0.7; margin-top: 0.6em; }
 /* captioned grid items keep their natural height so the caption sits below */
 .photo-grid figure img { height: auto; }
 
+/* Partner logo on a dark panel, for white-on-transparent marks */
+.logo-panel { background: #1f1f1f; padding: 38px 34px; display: flex; align-items: center; justify-content: center; }
+.logo-panel img { width: 100%; height: auto; }
+
 /* Two-column: image beside text */
 .two-col { display: grid; grid-template-columns: minmax(260px, 420px) 1fr; gap: 44px; align-items: start; }
 .two-col figure { margin: 0; }
