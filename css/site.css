@@ -22,6 +22,7 @@ body {
   color: #000;
   background: #fff;
   line-height: 1.8;
+  overflow-x: hidden;  /* full-bleed videos use 100vw, which can exceed the scrollbar-less width */
 }
 h1, h2, h3, h4 { font-weight: 500; line-height: 1.4; }
 b, strong { font-weight: 500; }
@@ -39,6 +40,15 @@ header {
 .site-nav { display: flex; gap: 28px; }
 .site-nav a { color: #fff; text-decoration: none; font-size: 1rem; }
 .site-nav a:hover, .site-nav a.current { text-decoration: underline; text-underline-offset: 6px; }
+
+/* Projects dropdown: opens on hover or keyboard focus, no JavaScript */
+.has-sub { position: relative; }
+.sub-menu {
+  display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+  background: #1f1f1f; padding: 10px 0; min-width: 110px; text-align: center;
+}
+.has-sub:hover .sub-menu, .has-sub:focus-within .sub-menu { display: block; }
+.sub-menu a { display: block; padding: 7px 20px; font-size: 0.95rem; }
 
 /* Hamburger — hidden on desktop */
 .menu-toggle {
@@ -62,6 +72,14 @@ header {
     gap: 1.4em;
   }
   .site-nav a { color: #000; font-size: 1.5rem; }
+  /* in the mobile overlay the years sit open beneath Projects */
+  .has-sub { display: flex; flex-direction: column; align-items: center; gap: 0.4em; }
+  .sub-menu {
+    display: flex; position: static; transform: none; background: none;
+    flex-wrap: wrap; justify-content: center; gap: 0 16px;
+    max-width: 290px; padding: 0; text-align: center;
+  }
+  .sub-menu a { font-size: 1.05rem; padding: 0; }
   body.nav-open .site-nav { display: flex; }
   body.nav-open { overflow: hidden; }
   body.nav-open .menu-toggle span { background: #000; }
@@ -101,8 +119,13 @@ figcaption { font-size: 0.9rem; opacity: 0.7; margin-top: 0.6em; }
 /* captioned grid items keep their natural height so the caption sits below */
 .photo-grid figure img { height: auto; }
 
-/* Embedded video (YouTube/Vimeo), responsive 16:9 */
-.video-embed { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; margin: 2em 0 0.6em; background: #000; }
+/* Embedded video (YouTube/Vimeo): full page width, 16:9 */
+.video-embed {
+  display: block; border: 0; background: #000;
+  aspect-ratio: 16 / 9;
+  width: 100vw; max-width: 100vw;
+  margin: 2em 0 0.6em; margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw);
+}
 
 /* Partner logo on a dark panel, for white-on-transparent marks */
 .logo-panel { background: #1f1f1f; padding: 38px 34px; display: flex; align-items: center; justify-content: center; }
